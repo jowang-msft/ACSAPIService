@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ApiService/bin
+/ApiService/dataPath
+/ApiService/obj
+/.vs
+/ApiService/.vs
+/ApiService/Properties/PublishProfiles
+/ApiService/ApiService.csproj.user
+/CallingAgent/bin
+/CallingAgent/obj
+/CallingAgent/CallingAgent.csproj.user
+/ApiService/Properties/ServiceDependencies
