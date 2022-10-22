@@ -2,6 +2,7 @@
 using Azure.WinRT.Communication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Diagnostics;
 using System.IO.Pipes;
@@ -42,13 +43,15 @@ namespace CallApiService.Controllers
 
         [HttpGet]
         [Route("call")]
-        public async Task<CallResults> CallAsync(string token)
+        public async Task<CallResults> CallAsync(string callee)
         {
+            StringValues acsToken;
+            this.Request.Headers.TryGetValue("ACSTOKEN", out acsToken);
             var results = new CallResults();
 
             try
             {
-                var callAgent = await InitCallAgentAsync(token);
+                var callAgent = await InitCallAgentAsync(acsToken);
 
                 results.Journal.Add("Calling");
 
@@ -58,7 +61,7 @@ namespace CallApiService.Controllers
                 var call = await callAgent.StartCallAsync(
                     new ICommunicationIdentifier[1]
                     {
-                        new CommunicationUserIdentifier("8:echo123")
+                        new CommunicationUserIdentifier(callee)
                     },
                     new StartCallOptions()
                     {
@@ -91,13 +94,17 @@ namespace CallApiService.Controllers
 
         [HttpGet]
         [Route("call2stream")]
-        public async Task CallAndStreamAsync(string token)
+        public async Task CallAndStreamAsync(string callee)
         {
+            StringValues acsToken;
+            this.Request.Headers.TryGetValue("ACSTOKEN", out acsToken);
+            var results = new CallResults();
+
             var outputStream = this.Response.Body;
 
             try
             {
-                var callAgent = await InitCallAgentAsync(token);
+                var callAgent = await InitCallAgentAsync(acsToken);
 
                 var incomingAudioStream = new RawIncomingAudioStream(new RawIncomingAudioProperties(AudioSampleRate.SampleRate_48000, AudioChannelMode.ChannelMode_Stereo, AudioFormat.Pcm_16_Bit));
                 var outgoingAudioStream = new RawOutgoingAudioStream(new RawOutgoingAudioProperties(AudioSampleRate.SampleRate_48000, AudioChannelMode.ChannelMode_Stereo, AudioFormat.Pcm_16_Bit, OutgoingAudioMsOfDataPerBlock.Ms_20));
@@ -105,7 +112,7 @@ namespace CallApiService.Controllers
                 var call = await callAgent.StartCallAsync(
                     new ICommunicationIdentifier[1]
                     {
-                        new CommunicationUserIdentifier("8:echo123")
+                        new CommunicationUserIdentifier(callee)
                     },
                     new StartCallOptions()
                     {
@@ -148,15 +155,19 @@ namespace CallApiService.Controllers
 
         [HttpGet]
         [Route("callout")]
-        public async Task CallAndStreamOutProcAsync(string token)
+        public async Task CallAndStreamOutProcAsync(string callee)
         {
+            StringValues acsToken;
+            this.Request.Headers.TryGetValue("ACSTOKEN", out acsToken);
+            var results = new CallResults();
+
             string pipeName = Guid.NewGuid().ToString();
 
             using (var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut, 1))
             {
                 Process pipeClient = new Process();
                 pipeClient.StartInfo.FileName = "CallingAgent.exe";
-                pipeClient.StartInfo.Arguments = $"{pipeName} {token}";
+                pipeClient.StartInfo.Arguments = $"{pipeName} {acsToken} {callee}";
                 pipeClient.StartInfo.UseShellExecute = false;
                 pipeClient.Start();
 

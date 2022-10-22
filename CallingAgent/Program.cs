@@ -35,11 +35,8 @@ namespace ACSCallAgent
             {
                 var pipeName = args[0];
                 var token = args[1];
-                Console.WriteLine($"{pipeName} - {token}");
-
-                token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwNiIsIng1dCI6Im9QMWFxQnlfR3hZU3pSaXhuQ25zdE5PU2p2cyIsInR5cCI6IkpXVCJ9.eyJza3lwZWlkIjoiYWNzOmI2YWFkYTFmLTBiMWQtNDdhYy04NjZmLTkxYWFlMDBhMWQwMV8wMDAwMDAxMy1mMzE2LWZhNTMtYjhiYS1hNDNhMGQwMDhkZDAiLCJzY3AiOjE3OTIsImNzaSI6IjE2NjM1NDgzNDgiLCJleHAiOjE2NjM2MzQ3NDgsImFjc1Njb3BlIjoidm9pcCIsInJlc291cmNlSWQiOiJiNmFhZGExZi0wYjFkLTQ3YWMtODY2Zi05MWFhZTAwYTFkMDEiLCJpYXQiOjE2NjM1NDgzNDh9.VNspnFAPMK1lqvY0tIY5FNjxyW6yaJREIRND8gccYSY_S-k5BJML3ibBX8hnVHedjprwHXFzMjeh61wyxbrm13_zX9HWWrK_1xsiWP-uA9c7dQgPcEHHneMIWCUfLqhdSWYmysrROFyOejukMHBS7hs4ajUD3OKxBoCvt0xOAy7of9WfgbOe1OZbRDbnQBg9N2ANLMlMcmoCF0A74dPrYfhFON2la4RrySIk0c__LG-pDzkMnl1ydn7HUk_3kLVIupKQEM-ULBcqNm6R5pb9g0J0Te5StY5YwRtWpekN_CD3iwwrZvZttTaJYl76VL9wsZbeqQAg8UDEbeak9SZDKg";
-                //ACS test token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwNiIsIng1dCI6Im9QMWFxQnlfR3hZU3pSaXhuQ25zdE5PU2p2cyIsInR5cCI6IkpXVCJ9.eyJza3lwZWlkIjoiYWNzOjk5NmQyMzA1LTkwYTEtNGIyYS05MmZkLWVlZmZmNDIxNWZmMl8wMDAwMDAxMy1lZjI2LTA0YTQtMmM4YS0wODQ4MjIwMDBjMmIiLCJzY3AiOjE3OTIsImNzaSI6IjE2NjM0ODIyMjQiLCJleHAiOjE2NjM1Njg2MjQsImFjc1Njb3BlIjoidm9pcCIsInJlc291cmNlSWQiOiI5OTZkMjMwNS05MGExLTRiMmEtOTJmZC1lZWZmZjQyMTVmZjIiLCJpYXQiOjE2NjM0ODIyMjR9.q2qBtLS13W - 4r_NBlhgFzKfYOskiCyHcG5LP0Su - Qmnzl3Y3HeHZu4OItvpLhHwVhVacb5uitiHj1ky44Dk7pnxFAi1szN7jXtgiNkU7HdJi76xN - _9A7a9leo - WiPnpWrlrZnHv5CW - YHRJ5U2dKOjEYRIGruRjCQtiYxkszelsYBFqDhAT9 - VnbiEzT6Zvgg1E0uJMb4OuMmAnUrNqvFHrX7iOyuLVEokZZWNWKwSRC - hEvcGvhZphG_Xj - RA1PLnRKNpKgHnfhqxstlLFgR7mjC19MPyusla1P1oAEsPGOKvXThLunu18D1XXb2yJ_h5UjoWITcMi5JAP7zvp1A";
-                //{ "token":"eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwNiIsIng1dCI6Im9QMWFxQnlfR3hZU3pSaXhuQ25zdE5PU2p2cyIsInR5cCI6IkpXVCJ9.eyJza3lwZWlkIjoiYWNzOmI2YWFkYTFmLTBiMWQtNDdhYy04NjZmLTkxYWFlMDBhMWQwMV8wMDAwMDAxMy1mMzE2LWZhNTMtYjhiYS1hNDNhMGQwMDhkZDAiLCJzY3AiOjE3OTIsImNzaSI6IjE2NjM1NDgzNDgiLCJleHAiOjE2NjM2MzQ3NDgsImFjc1Njb3BlIjoidm9pcCIsInJlc291cmNlSWQiOiJiNmFhZGExZi0wYjFkLTQ3YWMtODY2Zi05MWFhZTAwYTFkMDEiLCJpYXQiOjE2NjM1NDgzNDh9.VNspnFAPMK1lqvY0tIY5FNjxyW6yaJREIRND8gccYSY_S-k5BJML3ibBX8hnVHedjprwHXFzMjeh61wyxbrm13_zX9HWWrK_1xsiWP-uA9c7dQgPcEHHneMIWCUfLqhdSWYmysrROFyOejukMHBS7hs4ajUD3OKxBoCvt0xOAy7of9WfgbOe1OZbRDbnQBg9N2ANLMlMcmoCF0A74dPrYfhFON2la4RrySIk0c__LG-pDzkMnl1ydn7HUk_3kLVIupKQEM-ULBcqNm6R5pb9g0J0Te5StY5YwRtWpekN_CD3iwwrZvZttTaJYl76VL9wsZbeqQAg8UDEbeak9SZDKg","expiresOn":"2022-09-20T00:45:48.260Z","user":{ "communicationUserId":"8:acs:b6aada1f-0b1d-47ac-866f-91aae00a1d01_00000013-f316-fa53-b8ba-a43a0d008dd0"} }
+                var callee = args[2];
+                Console.WriteLine($"{pipeName} - {token} - {callee}");
 
                 try
                 {
@@ -53,7 +50,7 @@ namespace ACSCallAgent
                         var token_credential = new CommunicationTokenCredential(token);
                         var callAgentOptions = new CallAgentOptions()
                         {
-                            DisplayName = "Zheng Wang"
+                            DisplayName = "Callee"
                         };
 
                         Call call = null;
@@ -122,8 +119,7 @@ namespace ACSCallAgent
 
                         call = await callAgent.StartCallAsync(
                             new List<ICommunicationIdentifier>() {
-                                //new CommunicationUserIdentifier("8:echo123"),
-                                new CommunicationUserIdentifier("8:acs:b6aada1f-0b1d-47ac-866f-91aae00a1d01_00000013-f316-6cb7-b8ba-a43a0d008dc4")
+                                new CommunicationUserIdentifier(callee)
                             },
                             startCallOptions);
 

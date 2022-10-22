@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Properties\" />
     <Folder Include="runtimes\" />
   </ItemGroup>
 
@@ -64,59 +65,4 @@
     </None>
   </ItemGroup>
 
-
-	<!--<ItemGroup>
-    <ContentWithTargetPath Include="runtimes\Azure.Communication.Calling.WinRTProjections.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>Azure.Communication.Calling.WinRTProjections.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="..\runtimes\Azure.WinRT.Communication.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>Azure.WinRT.Communication.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="..\runtimes\Azure.Communication.Calling.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>Azure.Communication.Calling.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="..\runtimes\Azure.WinRT.Communication.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>Azure.WinRT.Communication.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\Azure.WinRT.Core.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>Azure.WinRT.Core.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\RtmCodecs.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>RtmCodecs.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\RtmMediaManager.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>RtmMediaManager.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\RtmMvrMf.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>RtmMvrMf.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\RtmPal.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>RtmPal.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\RTMPLTFM.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>RTMPLTFM.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\skypert.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>skypert.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\ssScreenVVS2.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>ssScreenVVS2.dll</TargetPath>
-    </ContentWithTargetPath>	  
-    <ContentWithTargetPath Include="..\runtimes\ssScreenVVS2.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <TargetPath>ssScreenVVS2.dll</TargetPath>
-    </ContentWithTargetPath>	  
-  </ItemGroup>-->
 </Project>

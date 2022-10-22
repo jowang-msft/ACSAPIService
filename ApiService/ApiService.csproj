@@ -9,17 +9,39 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\runtimes\Azure.Communication.Calling.dll" Link="Azure.Communication.Calling.dll" />
-    <None Include="..\runtimes\Azure.Communication.Calling.WinRTProjections.dll" Link="Azure.Communication.Calling.WinRTProjections.dll" />
-    <None Include="..\runtimes\Azure.WinRT.Communication.dll" Link="Azure.WinRT.Communication.dll" />
-    <None Include="..\runtimes\Azure.WinRT.Core.dll" Link="Azure.WinRT.Core.dll" />
-    <None Include="..\runtimes\RtmCodecs.dll" Link="RtmCodecs.dll" />
-    <None Include="..\runtimes\RtmMediaManager.dll" Link="RtmMediaManager.dll" />
-    <None Include="..\runtimes\RtmMvrMf.dll" Link="RtmMvrMf.dll" />
-    <None Include="..\runtimes\RtmPal.dll" Link="RtmPal.dll" />
-    <None Include="..\runtimes\RTMPLTFM.dll" Link="RTMPLTFM.dll" />
-    <None Include="..\runtimes\skypert.dll" Link="skypert.dll" />
-    <None Include="..\runtimes\ssScreenVVS2.dll" Link="ssScreenVVS2.dll" />
+    <None Include="..\runtimes\Azure.Communication.Calling.dll" Link="Azure.Communication.Calling.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\Azure.Communication.Calling.WinRTProjections.dll" Link="Azure.Communication.Calling.WinRTProjections.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\Azure.WinRT.Communication.dll" Link="Azure.WinRT.Communication.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\Azure.WinRT.Core.dll" Link="Azure.WinRT.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\RtmCodecs.dll" Link="RtmCodecs.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\RtmMediaManager.dll" Link="RtmMediaManager.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\RtmMvrMf.dll" Link="RtmMvrMf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\RtmPal.dll" Link="RtmPal.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\RTMPLTFM.dll" Link="RTMPLTFM.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\skypert.dll" Link="skypert.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\runtimes\ssScreenVVS2.dll" Link="ssScreenVVS2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +90,18 @@
     <None Update="skypert.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>	
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo $(TargetDir)JoWang" />
+  </Target>
+
+  <ItemGroup>
+    <CallingAgentFiles Include="$(SolutionDir)CallingAgent\bin\**\*.*" />
   </ItemGroup>
+
+  <Target Name="CopyCallingAgent" AfterTargets="Build">
+    <Copy SourceFiles="@(CallingAgentFiles)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="false"/>
+  </Target>
 
 </Project>
