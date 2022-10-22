@@ -4,7 +4,12 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0-windows10.0.17763.0</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
+
+  <!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>-->
 
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.1.0" />
@@ -12,7 +17,7 @@
 
   <ItemGroup>
     <Reference Include="Azure.Communication.Calling.WinRTProjections">
-      <HintPath>Azure.Communication.Calling.WinRTProjections.dll</HintPath>
+      <HintPath>..\runtimes\Azure.Communication.Calling.WinRTProjections.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5\System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
@@ -20,24 +25,98 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Azure.Communication.Calling.WinRTProjections.dll">
+    <Folder Include="runtimes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\runtimes\Azure.Communication.Calling.dll" Link="Azure.Communication.Calling.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Azure.WinRT.Communication.dll">
+	<None Include="..\runtimes\Azure.Communication.Calling.WinRTProjections.dll" Link="Azure.Communication.Calling.WinRTProjections.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="RtmCodecs.dll">
+	  <None Include="..\runtimes\Azure.WinRT.Communication.dll" Link="Azure.WinRT.Communication.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="RtmMvrMf.dll">
+	  <None Include="..\runtimes\Azure.WinRT.Core.dll" Link="Azure.WinRT.Core.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="RTMPLTFM.dll">
+	  <None Include="..\runtimes\RtmCodecs.dll" Link="RtmCodecs.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ssScreenVVS2.dll">
+    <None Include="..\runtimes\RtmMediaManager.dll" Link="RtmMediaManager.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	<None Include="..\runtimes\RtmMvrMf.dll" Link="RtmMvrMf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Include="..\runtimes\RtmPal.dll" Link="RtmPal.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Include="..\runtimes\RTMPLTFM.dll" Link="RTMPLTFM.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Include="..\runtimes\skypert.dll" Link="skypert.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Include="..\runtimes\ssScreenVVS2.dll" Link="ssScreenVVS2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
+
+	<!--<ItemGroup>
+    <ContentWithTargetPath Include="runtimes\Azure.Communication.Calling.WinRTProjections.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>Azure.Communication.Calling.WinRTProjections.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="..\runtimes\Azure.WinRT.Communication.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>Azure.WinRT.Communication.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="..\runtimes\Azure.Communication.Calling.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>Azure.Communication.Calling.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="..\runtimes\Azure.WinRT.Communication.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>Azure.WinRT.Communication.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\Azure.WinRT.Core.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>Azure.WinRT.Core.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\RtmCodecs.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>RtmCodecs.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\RtmMediaManager.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>RtmMediaManager.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\RtmMvrMf.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>RtmMvrMf.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\RtmPal.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>RtmPal.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\RTMPLTFM.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>RTMPLTFM.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\skypert.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>skypert.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\ssScreenVVS2.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>ssScreenVVS2.dll</TargetPath>
+    </ContentWithTargetPath>	  
+    <ContentWithTargetPath Include="..\runtimes\ssScreenVVS2.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>ssScreenVVS2.dll</TargetPath>
+    </ContentWithTargetPath>	  
+  </ItemGroup>-->
 </Project>
