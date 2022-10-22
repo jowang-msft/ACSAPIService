@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CallingAgent\CallingAgent.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Azure.Communication.Calling.WinRTProjections">
       <HintPath>..\runtimes\Azure.Communication.Calling.WinRTProjections.dll</HintPath>
     </Reference>
