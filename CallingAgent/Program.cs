@@ -78,25 +78,23 @@ namespace ACSCallAgent
                         };
 
                         // Configure outgoing video
+                        var localVideoStreams = new LocalVideoStream[1];
+                        IReadOnlyList<VideoDeviceInfo> cameras = deviceManager.Cameras;
+                        if (cameras.Count > 0)
+                        {
+                            VideoDeviceInfo videoDeviceInfo = cameras[0];
+                            localVideoStreams[0] = new LocalVideoStream(videoDeviceInfo);
+                        }
 
-                        //var localVideoStream = new LocalVideoStream[1];
-                        //IReadOnlyList<VideoDeviceInfo> cameras = deviceManager.Cameras;
-                        //if (cameras.Count > 0)
-                        //{
-                        //    VideoDeviceInfo videoDeviceInfo = cameras[0];
-                        //    localVideoStream[0] = new LocalVideoStream(videoDeviceInfo);
-                        //}
-
-                        var videoFormat = new VideoFormat() { Width = 1280, Height = 720, PixelFormat = PixelFormat.Bgrx, VideoFrameKind = VideoFrameKind.VideoSoftware, FramesPerSecond = 30, Stride1 = 1280 * 4 };
                         var rawoutgoingVideoStreamOptions = new RawOutgoingVideoStreamOptions();
-                        rawoutgoingVideoStreamOptions.SetVideoFormats(new VideoFormat[] { videoFormat });
+                        rawoutgoingVideoStreamOptions.SetVideoFormats(new VideoFormat[] { 
+                            new VideoFormat() { Width = 1280, Height = 720, PixelFormat = PixelFormat.Bgrx, VideoFrameKind = VideoFrameKind.VideoSoftware, FramesPerSecond = 30, Stride1 = 1280 * 4 } });
                         rawoutgoingVideoStreamOptions.OnVideoFrameSenderChanged += async (object sender, VideoFrameSenderChangedEventArgs args) =>
                         {
-                            await OnPrepareAndSendVideoFrames(sender, args);
+                            await OnPrepareAndSendVideoFramesAsync(sender, args);
                         };
-                        var virtualRawoutgoingVideoStream = new VirtualRawOutgoingVideoStream(rawoutgoingVideoStreamOptions);
-
-                        var videoOptions = new VideoOptions(new OutgoingVideoStream[] { virtualRawoutgoingVideoStream /*, localVideoStream[0] */});
+                        var videoOptions = new VideoOptions(new OutgoingVideoStream[] { 
+                            new VirtualRawOutgoingVideoStream(rawoutgoingVideoStreamOptions) /*, localVideoStreams[0] */});
 
                         Console.WriteLine("Calling...");
 
@@ -116,12 +114,17 @@ namespace ACSCallAgent
                             },
                             startCallOptions);
 
-                        call.OnStateChanged += (object sender, PropertyChangedEventArgs args) =>
+                        call.OnStateChanged += async (object sender, PropertyChangedEventArgs args) =>
                         {
                             Call call = sender as Call;
                             if (call != null)
                             {
                                 Console.WriteLine(call.State);
+                                if (call.State == CallState.Connected)
+                                {
+                                    //await call.StartVideo(new VirtualRawOutgoingVideoStream(rawoutgoingVideoStreamOptions));
+                                    //await call.StartVideo(localVideoStreams[0]);
+                                }
                             }
                         };
 
@@ -132,8 +135,8 @@ namespace ACSCallAgent
                         // BUG: This is to keep a reference to VideoFormats and prevent it from being released.
                         if (startCallOptions.VideoOptions != null)
                         {
-                            //var format = rawoutgoingVideoStreamOptions.VideoFormats;
-                            //Console.WriteLine(format.ToString());
+                            var format = rawoutgoingVideoStreamOptions.VideoFormats;
+                            Console.WriteLine(format.ToString());
                         }
 
                         cancel.Cancel();
@@ -158,7 +161,7 @@ namespace ACSCallAgent
             }
         }
 
-        private static async Task OnPrepareAndSendVideoFrames(object sender, VideoFrameSenderChangedEventArgs args)
+        private static async Task OnPrepareAndSendVideoFramesAsync(object sender, VideoFrameSenderChangedEventArgs args)
         {
             // TODO: Lock on cancel
             cancel.Cancel();
