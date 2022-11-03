@@ -38,9 +38,10 @@ namespace ACSCallAgent
                 try
                 {
                     //string audioFile = string.IsNullOrEmpty(pipeName) ? Guid.NewGuid().ToString() : pipeName;
-                    string audioFile = Guid.NewGuid().ToString();
-                    using (WaveFileWriter writer = new WaveFileWriter($"C:\\CallStreams\\audio-{audioFile}.wav", new WaveFormat(48000, 16, 2)))
+                    //string audioFile = Guid.NewGuid().ToString();
+                    //using (WaveFileWriter writer = new WaveFileWriter($"C:\\CallStreams\\audio-{audioFile}.wav", new WaveFormat(48000, 16, 2)))
                     {
+                        WaveFileWriter writer = null;
                         var callClient = new CallClient();
 
                         var deviceManager = await callClient.GetDeviceManager();
@@ -91,7 +92,8 @@ namespace ACSCallAgent
                             new VideoFormat() { Width = 1280, Height = 720, PixelFormat = PixelFormat.Bgrx, VideoFrameKind = VideoFrameKind.VideoSoftware, FramesPerSecond = 30, Stride1 = 1280 * 4 } });
                         rawoutgoingVideoStreamOptions.OnVideoFrameSenderChanged += async (object sender, VideoFrameSenderChangedEventArgs args) =>
                         {
-                            await OnPrepareAndSendVideoFramesAsync(sender, args);
+                            var videFrameSender = args.VideoFrameSender;
+                            GenerateFramesAsync(videFrameSender); // Start and forget - no await
                         };
                         var videoOptions = new VideoOptions(new OutgoingVideoStream[] { 
                             new VirtualRawOutgoingVideoStream(rawoutgoingVideoStreamOptions) /*, localVideoStreams[0] */});
@@ -122,24 +124,28 @@ namespace ACSCallAgent
                                 Console.WriteLine(call.State);
                                 if (call.State == CallState.Connected)
                                 {
-                                    //await call.StartVideo(new VirtualRawOutgoingVideoStream(rawoutgoingVideoStreamOptions));
                                     //await call.StartVideo(localVideoStreams[0]);
+                                }
+                                if (call.State == CallState.Disconnected)
+                                {
+                                    cancel.Cancel();
                                 }
                             }
                         };
 
-                        await Task.Delay(30000);
+                        await Task.Delay(30000, cancel.Token);
 
                         Console.WriteLine($"Total: {audioCount}, {videoFrameCount}");
 
                         // BUG: This is to keep a reference to VideoFormats and prevent it from being released.
-                        if (startCallOptions.VideoOptions != null)
-                        {
-                            var format = rawoutgoingVideoStreamOptions.VideoFormats;
-                            Console.WriteLine(format.ToString());
-                        }
+                        //if (startCallOptions.VideoOptions != null)
+                        //{
+                        //    var format = rawoutgoingVideoStreamOptions.VideoFormats;
+                        //    Console.WriteLine(format.ToString());
+                        //}
 
-                        cancel.Cancel();
+                        if (!cancel.IsCancellationRequested)
+                            cancel.Cancel();
 
                         if (call.State != CallState.Disconnected)
                         {
@@ -159,16 +165,8 @@ namespace ACSCallAgent
                     Console.WriteLine(e);
                 }
             }
-        }
 
-        private static async Task OnPrepareAndSendVideoFramesAsync(object sender, VideoFrameSenderChangedEventArgs args)
-        {
-            // TODO: Lock on cancel
-            cancel.Cancel();
-            cancel = new CancellationTokenSource();
-            var videFrameSender = args.VideoFrameSender;
-            await GenerateFramesAsync(videFrameSender);
-            Console.WriteLine(videFrameSender.VideoFormat.ToString());
+            Environment.Exit(0);
         }
 
         private static async Task OnPrepareAndSendOutgoingAudioStreamAsync(object sender, PropertyChangedEventArgs args)
@@ -180,41 +178,42 @@ namespace ACSCallAgent
                 var properties = rawOutgoingAudioStream.RawOutgoingAudioProperties;
                 int currentSampleNumber = 0;
                 new Thread(async () =>
-                {
-                    try
                     {
-                        DateTime nextDeliverTime = DateTime.Now;
-                        OutgoingAudioBuffer buffer;
-                        while (true)
+                        try
                         {
-                            nextDeliverTime = nextDeliverTime.AddMilliseconds(20);
-                            buffer = new OutgoingAudioBuffer(properties);
-                            List<byte> data = new List<byte>();
-                            currentSampleNumber = GenerateToneData(currentSampleNumber, 440, data, buffer.DataSize / (int)properties.ChannelMode, (int)properties.ChannelMode, (int)properties.SampleRate);
-                            buffer.Data = data;
-                            var buffer2 = new OutgoingAudioBuffer(properties) { Data = data };
-
-                            rawOutgoingAudioStream.SendOutgoingAudioBuffer(buffer2);
-                            audioCount++;
-                            TimeSpan wait = nextDeliverTime - DateTime.Now;
-                            if (wait > TimeSpan.Zero)
+                            DateTime nextDeliverTime = DateTime.Now;
+                            OutgoingAudioBuffer buffer;
+                            while (!cancel.IsCancellationRequested)
                             {
-                                await Task.Delay(wait);
+                                nextDeliverTime = nextDeliverTime.AddMilliseconds(20);
+                                buffer = new OutgoingAudioBuffer(properties);
+                                List<byte> data = new List<byte>();
+                                currentSampleNumber = GenerateToneData(currentSampleNumber, 440, data, buffer.DataSize / (int)properties.ChannelMode, (int)properties.ChannelMode, (int)properties.SampleRate);
+                                buffer.Data = data;
+                                var buffer2 = new OutgoingAudioBuffer(properties) { Data = data };
+
+                                rawOutgoingAudioStream.SendOutgoingAudioBuffer(buffer2);
+                                audioCount++;
+                                TimeSpan wait = nextDeliverTime - DateTime.Now;
+                                if (wait > TimeSpan.Zero)
+                                {
+                                    await Task.Delay(wait);
+                                }
                             }
                         }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                })
+                )
                 { IsBackground = true }.Start();
             }
         }
 
         private static async Task OnHandleIncomingAudioAsync(object sender, IncomingAudioEventArgs args, WaveFileWriter writer)
         {
-            if (args?.IncomingAudioBuffer?.Data != null)
+            if ((args?.IncomingAudioBuffer?.Data != null) && (writer != null))
             {
                 var bytes = args.IncomingAudioBuffer.Data.ToArray();
                 writer.WriteData(bytes, 0, bytes.Length);
@@ -230,8 +229,8 @@ namespace ACSCallAgent
             int samplesPerSecond)
         {
             sampleBuffer.Clear();
-            double ReferenceSoundPressure = 20.0;   // dB
-            double ReferenceAudioToneLevel = -20.0; // dB
+            double ReferenceSoundPressure = 19.0;   // dB
+            double ReferenceAudioToneLevel = -45.0; // dB
 
             int AudioMaxLevel = byte.MaxValue;
             double maxLevel =
@@ -316,8 +315,6 @@ namespace ACSCallAgent
                     }
                 }
             }
-
-            Console.WriteLine("End of frame generator thread.");
         }
     }
 }
